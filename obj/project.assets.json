@@ -13,9 +13,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\VirtualTerminal.csproj",
-      "projectName": "VirtualTerminal",
-      "projectPath": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\VirtualTerminal.csproj",
+      "projectUniqueName": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\BetaGame.csproj",
+      "projectName": "BetaGame",
+      "projectPath": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\BetaGame.csproj",
       "packagesPath": "C:\\Users\\CheeseSand\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\obj\\",
       "projectStyle": "PackageReference",

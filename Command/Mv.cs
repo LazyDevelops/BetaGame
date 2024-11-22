@@ -21,7 +21,7 @@ namespace VirtualTerminal.Command
 
             Dictionary<string, bool> options = new() { { "r", false }, { "f", false } };
 
-            VirtualTerminal.OptionCheck(ref options, in argv);*/
+            BetaGame.OptionCheck(ref options, in argv);*/
 
             /*foreach (string arg in argv.Skip(1))
             {
