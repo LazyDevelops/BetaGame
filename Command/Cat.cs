@@ -45,7 +45,7 @@ namespace VirtualTerminal.Command
                 return file.Data.Content + "\n";
             }
 
-            return VT.ReadMultiLineInput();
+            return VT.ReadMultiLineInput() + "\n";
         }
 
         public string Description(bool detail)
