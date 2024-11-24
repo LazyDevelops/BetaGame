@@ -205,7 +205,6 @@ namespace VirtualTerminal
         internal string ReadMultiLineInput()
         {
             string content = string.Empty;
-            string? test = null;
 
             while (true)
             {
