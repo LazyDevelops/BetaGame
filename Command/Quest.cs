@@ -100,7 +100,7 @@ namespace VirtualTerminal.Command
                        "       quest clear 4\n";
             }
 
-            return "quest - 미션, 미션 클리어 여부 확인 및 미션 클리어 검사\n";
+            return "quest - 미션, 미션 클리어 여부 확인 및 미션 클리어 검사";
         }
     }
 }
