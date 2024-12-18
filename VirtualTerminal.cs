@@ -1,3 +1,4 @@
+using System.Data.SqlTypes;
 using System.Text.RegularExpressions;
 using VirtualTerminal.Command;
 using VirtualTerminal.Error;
@@ -10,6 +11,11 @@ namespace VirtualTerminal
 {
     public class VirtualTerminal
     {
+        internal long money = 0;
+        
+        internal long level = 1;
+        internal long exp = 0;
+
         internal readonly Dictionary<string, ICommand> CommandMap;
 
         internal FileSystem.FileSystem FileSystem = new();
@@ -72,8 +78,10 @@ namespace VirtualTerminal
                 { "exit", new ExitCommand() },
                 { "help", new HelpCommand() },
                 { "ls", new LsCommand() },
+                { "level", new LevelCommand() },
                 { "man", new ManCommand() },
                 { "mkdir", new MkDirCommand() },
+                { "money", new MoneyCommand() },
                 { "mv", new MvCommand() }, // 제작 전
                 { "pwd", new PwdCommand() },
                 { "quest", new QuestCommand() },
