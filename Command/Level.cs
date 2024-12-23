@@ -4,7 +4,43 @@ namespace VirtualTerminal.Command
     {
         public string? Execute(int argc, string[] argv, VirtualTerminal VT)
         {
-            return "레벨: " + VT.level.ToString() + "\n";
+            string? result = "레벨: " + VT.level.ToString() + 
+                             ", Exp: " + VT.exp.ToString() + "\n" +
+                             "0 [";
+            
+            int progress = CalculateProgress(VT.maxExp, VT.exp, 20);
+
+            for(int i = 0; i < progress; i++){
+                result += "=";
+            }
+
+            for(int i = progress; i < 20; i++){
+                result += "-";
+            }
+
+            result += "] " + VT.maxExp +"\n";
+
+            return result;
+        }
+
+        static int CalculateProgress(long maxValue, long currentValue, int steps)
+        {
+            if (maxValue <= 0)
+            {
+                return 0;
+            }
+
+            if (steps <= 0)
+            {
+                return 0;
+            }
+
+            // 현재 값을 최대값 대비 0에서 steps까지의 단계로 변환
+            double ratio = (double)currentValue / maxValue;
+            int progress = (int)(ratio * steps);
+
+            // 진행도는 0에서 steps 사이로 제한
+            return Math.Clamp(progress, 0, steps);
         }
 
         public string Description(bool detail)

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Nodes;
 using VirtualTerminal.Error;
 using VirtualTerminal.Quest;
 
@@ -57,21 +58,168 @@ namespace VirtualTerminal.Command
             string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
             string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
             
+            //string jsonString = File.ReadAllText(jsonFilePath);
+            
+            if (!File.Exists(jsonFilePath))
+            {
+                return "JSON 파일이 존재하지 않습니다: " + jsonFilePath + "\n";
+            }
+
+            try
+            {
+                // JSON 파일 읽기
+                string jsonString = File.ReadAllText(jsonFilePath);
+
+                // JSON 데이터 파싱
+                JsonObject? quests = JsonSerializer.Deserialize<JsonObject>(jsonString);
+
+                if (quests != null && !quests.ContainsKey(questNumber.ToString()))
+                {
+                    return "해당 번호의 퀘스트가 존재하지 않습니다.\n";
+                }
+
+                if (quests[questNumber.ToString()] is not JsonObject quest)
+                {
+                    return "해당 퀘스트는 내용이 없습니다.\n";
+                }
+
+                if (quest == null || !quest.TryGetPropertyValue("questContent", out JsonNode? questContent))
+                {
+                    return "해당 퀘스트는 내용이 없습니다.\n";
+                }
+
+                if (string.IsNullOrEmpty(questContent?.ToString()))
+                {
+                    return "해당 퀘스트는 내용이 없습니다.\n";
+                }
+
+                return (string?)questContent + "\n";
+            }
+            catch (Exception ex)
+            {
+                return "JSON 파일 처리 중 오류가 발생했습니다: " + ex.Message + "\n";
+            }
+        }
+
+        private List<KeyValuePair<string, string>>? GetQuestRewards(int questNumber)
+        {
+            string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
+            string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
+
+            if (!File.Exists(jsonFilePath))
+            {
+                return null;
+            }
+
+            try
+            {
+                // JSON 파일 읽기
+                string jsonString = File.ReadAllText(jsonFilePath);
+
+                // JSON 데이터 파싱
+                JsonObject? quests = JsonSerializer.Deserialize<JsonObject>(jsonString);
+
+                if (quests == null)
+                {
+                    return null;
+                }
+
+                // 키가 존재하는지 확인
+                if (!quests.TryGetPropertyValue(questNumber.ToString(), out JsonNode? questNode) || questNode is not JsonObject quest)
+                {
+                    return null;
+                }
+
+                // 리워드 추출
+                if (!quest.TryGetPropertyValue("rewards", out JsonNode? rewardsNode) || rewardsNode is not JsonObject rewards)
+                {
+                    return null;
+                }
+
+                // KeyValuePair 목록 생성
+                List<KeyValuePair<string, string>> rewardList = [];
+
+                foreach (var reward in rewards)
+                {
+                    rewardList.Add(new KeyValuePair<string, string>(reward.Key, reward.Value?.ToString() ?? "null"));
+                }
+
+                return rewardList;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        // private string? ReturnQuestContent(int questNumber)
+        // {
+        //     string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
+        //     string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
+            
+        //     string jsonString = File.ReadAllText(jsonFilePath);
+        //     var quests = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(jsonString);
+
+        //     if (quests == null || !quests.TryGetValue(questNumber.ToString(), out var quest))
+        //     {
+        //         return "해당 번호의 퀘스트를 찾을 수 없습니다.\n";
+        //     }
+
+        //     if (!quest.TryGetValue("questContent", out var questContent))
+        //     {
+        //         return null;
+        //     }
+
+        //     return (questNumber < _questManager.CurrentQuest ? $"{questContent}\u001b[1;32m(성공)\u001b[0m" : questContent)+"\n";
+        // }
+        /*private string? ReturnQuestContent(int questNumber)
+        {
+            string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
+            string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
+
+            // JSON 파일 읽기
             string jsonString = File.ReadAllText(jsonFilePath);
-            var quests = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(jsonString);
+
+            // JSON 역직렬화
+            var quests = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(jsonString);
+
+            // 퀘스트 번호 확인
+            if (quests == null || !quests.TryGetValue(questNumber.ToString(), out var quest))
+            {
+                return "해당 번호의 퀘스트를 찾을 수 없습니다.\n";
+            }
+
+            // questContent 가져오기
+            if (!quest.TryGetValue("questContent", out var questContentObj) || questContentObj is not string questContent)
+            {
+                return $"퀘스트 {questNumber}에 유효한 내용이 없습니다.\n";
+            }
+
+            // 현재 퀘스트와 비교하여 성공 표시 추가
+            return (questNumber < _questManager.CurrentQuest
+                ? $"{questContent}\u001b[1;32m(성공)\u001b[0m"
+                : questContent) + "\n";
+        }*/
+        /*private string? ReturnQuestContent(int questNumber)
+        {
+            string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
+            string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
+
+            string jsonString = File.ReadAllText(jsonFilePath);
+            var quests = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, object>>>(jsonString);
 
             if (quests == null || !quests.TryGetValue(questNumber.ToString(), out var quest))
             {
                 return "해당 번호의 퀘스트를 찾을 수 없습니다.\n";
             }
 
-            if (!quest.TryGetValue("questContent", out var questContent))
+            if (!quest.TryGetValue("questContent", out var questContentObj) || questContentObj is not string questContent )
             {
                 return null;
             }
 
-            return (questNumber < _questManager.CurrentQuest ? $"{questContent}\u001b[1;32m(성공)\u001b[0m" : questContent)+"\n";
-        }
+            return (questNumber < _questManager.CurrentQuest ? $"{questContent}\u001b[1;32m(성공)\u001b[0m" : questContent) + "\n";
+        }*/
 
         public string Description(bool detail)
         {

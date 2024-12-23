@@ -15,6 +15,7 @@ namespace VirtualTerminal
         
         internal long level = 1;
         internal long exp = 0;
+        internal long maxExp = 10;
 
         internal readonly Dictionary<string, ICommand> CommandMap;
 
