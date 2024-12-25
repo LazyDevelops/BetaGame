@@ -29,7 +29,7 @@ namespace VirtualTerminal.Command
                 if (!int.TryParse(argv[1], out int intArgv))
                 {
                     // 현제 퀘스트 클리어 여부 확인
-                    return _questManager.CheckQuest(questNumber, VT);
+                    return ClearCheck(questNumber, VT);
                 }
 
                 // 입력으로 받은 번째의 퀘스트 확인
@@ -47,10 +47,50 @@ namespace VirtualTerminal.Command
 
                 // 입력으로 받은 번째의 클리어 여부 확인
                 questNumber = intArgv;
-                return _questManager.CheckQuest(questNumber, VT);
+                return ClearCheck(questNumber, VT);
             }
 
             return null;
+        }
+
+        private string ClearCheck(int questNumber, VirtualTerminal VT){
+            string? error = null;
+            bool result = _questManager.CheckQuest(questNumber, ref error, VT);
+
+            if (error != null)
+            {
+                return error;
+            }
+
+            if(result)
+            {
+                List<KeyValuePair<string, string>>? rewards;
+                rewards = GetQuestRewards(questNumber);
+
+                if(rewards != null){
+                    foreach(var reward in rewards)
+                    {
+                        if(reward.Key == "money")
+                        {
+                            VT.money += int.Parse(reward.Value);
+                        }
+                        else if(reward.Key == "exp")
+                        {
+                            VT.exp += int.Parse(reward.Value);
+                        }
+                    }
+                }
+                else
+                {
+                    return "error";
+                }
+
+                return "퀘스트 클리어 성공\n";
+            }
+            else
+            {
+                return "퀘스트 클리어 실패\n";
+            }
         }
 
         private string? ReturnQuestContent(int questNumber)
@@ -93,7 +133,8 @@ namespace VirtualTerminal.Command
                     return "해당 퀘스트는 내용이 없습니다.\n";
                 }
 
-                return (string?)questContent + "\n";
+                //return (string?)questContent + "\n";
+                return (questNumber < _questManager.CurrentQuest ? $"{questContent}\u001b[1;32m(성공)\u001b[0m" : questContent)+"\n";
             }
             catch (Exception ex)
             {
@@ -108,6 +149,7 @@ namespace VirtualTerminal.Command
 
             if (!File.Exists(jsonFilePath))
             {
+                Console.WriteLine("JSON 파일이 존재하지 않습니다.");
                 return null;
             }
 
@@ -121,23 +163,33 @@ namespace VirtualTerminal.Command
 
                 if (quests == null)
                 {
+                    Console.WriteLine("퀘스트 데이터가 없습니다.");
                     return null;
                 }
 
-                // 키가 존재하는지 확인
+                // 퀘스트 번호로 해당 퀘스트를 찾기
                 if (!quests.TryGetPropertyValue(questNumber.ToString(), out JsonNode? questNode) || questNode is not JsonObject quest)
                 {
+                    Console.WriteLine($"퀘스트 {questNumber}가 없습니다.");
                     return null;
                 }
 
-                // 리워드 추출
-                if (!quest.TryGetPropertyValue("rewards", out JsonNode? rewardsNode) || rewardsNode is not JsonObject rewards)
+                // "reward" 속성이 존재하는지 확인
+                if (!quest.TryGetPropertyValue("reward", out JsonNode? rewardNode))
                 {
+                    Console.WriteLine("리워드 속성이 존재하지 않습니다.");
+                    return null;
+                }
+
+                // rewardNode가 JsonObject인 경우에만 처리
+                if (rewardNode is not JsonObject rewards)
+                {
+                    Console.WriteLine("리워드가 JsonObject가 아닙니다.");
                     return null;
                 }
 
                 // KeyValuePair 목록 생성
-                List<KeyValuePair<string, string>> rewardList = [];
+                List<KeyValuePair<string, string>> rewardList = new();
 
                 foreach (var reward in rewards)
                 {
@@ -146,11 +198,67 @@ namespace VirtualTerminal.Command
 
                 return rewardList;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"오류 발생: {ex.Message}");
                 return null;
             }
         }
+
+        // private List<KeyValuePair<string, string>>? GetQuestRewards(int questNumber)
+        // {
+        //     string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
+        //     string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
+
+        //     if (!File.Exists(jsonFilePath))
+        //     {
+        //         Console.WriteLine(1);
+        //         return null;
+        //     }
+
+        //     try
+        //     {
+        //         // JSON 파일 읽기
+        //         string jsonString = File.ReadAllText(jsonFilePath);
+
+        //         // JSON 데이터 파싱
+        //         JsonObject? quests = JsonSerializer.Deserialize<JsonObject>(jsonString);
+
+        //         if (quests == null)
+        //         {
+        //             Console.WriteLine(2);
+        //             return null;
+        //         }
+
+        //         // 키가 존재하는지 확인
+        //         if (!quests.TryGetPropertyValue(questNumber.ToString(), out JsonNode? questNode) || questNode is not JsonObject quest)
+        //         {
+        //             Console.WriteLine(3);
+        //             return null;
+        //         }
+
+        //         // 리워드 추출
+        //         if (!quest.TryGetPropertyValue("rewards", out JsonNode? rewardsNode) || rewardsNode is not JsonObject rewards)
+        //         {
+        //             Console.WriteLine(4);
+        //             return null;
+        //         }
+
+        //         // KeyValuePair 목록 생성
+        //         List<KeyValuePair<string, string>> rewardList = [];
+
+        //         foreach (var reward in rewards)
+        //         {
+        //             rewardList.Add(new KeyValuePair<string, string>(reward.Key, reward.Value?.ToString() ?? "null"));
+        //         }
+
+        //         return rewardList;
+        //     }
+        //     catch (Exception)
+        //     {
+        //         return null;
+        //     }
+        // }
 
         // private string? ReturnQuestContent(int questNumber)
         // {

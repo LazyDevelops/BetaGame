@@ -5,14 +5,14 @@ namespace VirtualTerminal.Quest
 {
     public class Quest1 : QuestManager.IQuest
     {
-        public string QuestClearCheck(VirtualTerminal VT)
+        public bool QuestClearCheck(VirtualTerminal VT)
         {
             Node<FileDataStruct>? file;
             file = VT.HomeNode;
 
             if (file == null)
             {
-                return "실패\n";
+                return false;
             }
 
             foreach (Node<FileDataStruct> tempFile in file.Children)
@@ -28,15 +28,15 @@ namespace VirtualTerminal.Quest
 
             if (file.Data.Name != "eminai.txt")
             {
-                return "실패\n";
+                return false;
             }
 
             if (file.Data.Content?.TrimEnd('\n').TrimEnd(' ') != "I love linux")
             {
-                return "실패\n";
+                return false;
             }
             
-            return "성공\n";
+            return true;
         }
     }
 }

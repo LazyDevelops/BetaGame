@@ -223,6 +223,7 @@ namespace VirtualTerminal
             return Regex.Replace(input, ansiEscapePattern, string.Empty);
         }
 
+        // VT 레포에 반영하기
         internal string ReadMultiLineInput()
         {
             string content = string.Empty;
@@ -230,17 +231,52 @@ namespace VirtualTerminal
             while (true)
             {
                 string? input = Console.ReadLine();
-                
-                if (input == null || input[0] == 4)
+
+                // input이 null인 경우 종료
+                if (input == null)
                 {
                     break;
                 }
 
+                // input이 비어있지 않으면 Ctrl+D 체크
+                if (input.Length > 0 && input[0] == 4)
+                {
+                    break;
+                }
+
+                // 빈 문자열은 무시하고 계속 입력 받기
                 content += input + "\n";
             }
 
             return content.TrimEnd('\n');
         }
+
+        // internal string ReadMultiLineInput()
+        // {
+        //     string content = string.Empty;
+
+        //     while (true)
+        //     {
+        //         string? input = Console.ReadLine();
+                
+        //         if (input == null){
+        //             break;
+        //         }
+                
+        //         if(input[0] == 4)
+        //         {
+        //             break;
+        //         }
+        //         // if (string.IsNullOrEmpty(input) || input[0] == 4)
+        //         // {
+        //         //     break;
+        //         // }
+
+        //         content += input + "\n";
+        //     }
+
+        //     return content.TrimEnd('\n');
+        // }
         
         internal static void OptionCheck(ref Dictionary<string, bool> option, in string[] argv)
         {
