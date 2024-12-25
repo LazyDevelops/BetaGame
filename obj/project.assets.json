@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "/home/code/.nuget/packages/": {}
+    "C:\\Users\\CheeseSand\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/code/BetaGame/BetaGame.csproj",
+      "projectUniqueName": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\BetaGame.csproj",
       "projectName": "BetaGame",
-      "projectPath": "/home/code/BetaGame/BetaGame.csproj",
-      "packagesPath": "/home/code/.nuget/packages/",
-      "outputPath": "/home/code/BetaGame/obj/",
+      "projectPath": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\BetaGame.csproj",
+      "packagesPath": "C:\\Users\\CheeseSand\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\CheeseSand\\Desktop\\Project\\betaGame\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/code/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\CheeseSand\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -38,7 +38,13 @@
         "warnAsError": [
           "NU1605"
         ]
-      }
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "all"
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
@@ -59,7 +65,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.110/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Users\\CheeseSand\\.dotnet\\sdk\\9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
