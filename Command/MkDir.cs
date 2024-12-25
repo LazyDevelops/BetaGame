@@ -13,12 +13,6 @@ namespace VirtualTerminal.Command
                 return ErrorMessage.ArgLack(argv[0]);
             }
 
-            Node<FileDataStruct>? parentFile;
-            string? absolutePath;
-            string? parentPath;
-            string? fileName;
-            bool[] permission;
-
             foreach (string arg in argv.Skip(1))
             {
                 if (arg.Contains('-') || arg.Contains("--"))
@@ -26,18 +20,30 @@ namespace VirtualTerminal.Command
                     continue;
                 }
 
-                absolutePath = VT.FileSystem.GetAbsolutePath(arg, VT.HOME, VT.PWD);
-                fileName = absolutePath.Split('/')[^1];
-                parentPath = absolutePath.Replace('/' + fileName, "");
+                // 절대 경로 계산
+                string absolutePath = VT.FileSystem.GetAbsolutePath(arg, VT.HOME, VT.PWD);
+                List<string> pathParts = absolutePath.Trim('/').Split('/').ToList();
 
-                parentFile = VT.FileSystem.FileFind(parentPath, VT.Root);
+                if (pathParts.Count == 0)
+                {
+                    return ErrorMessage.NoSuchForD(argv[0], ErrorMessage.DefaultErrorComment(arg));
+                }
+
+                // 파일 이름과 부모 경로 추출
+                string fileName = pathParts[^1];
+                pathParts.RemoveAt(pathParts.Count - 1);
+                string parentPath = "/" + string.Join('/', pathParts);
+
+                // 부모 폴더 탐색
+                Node<FileDataStruct>? parentFile = VT.FileSystem.FileFind(parentPath, VT.Root);
 
                 if (parentFile == null)
                 {
                     return ErrorMessage.NoSuchForD(argv[0], ErrorMessage.DefaultErrorComment(arg));
                 }
 
-                permission = VT.FileSystem.CheckPermission(VT.USER, parentFile, VT.Root);
+                // 권한 검사
+                bool[] permission = VT.FileSystem.CheckPermission(VT.USER, parentFile, VT.Root);
 
                 if (!permission[0] || !permission[1] || !permission[2])
                 {
@@ -49,11 +55,13 @@ namespace VirtualTerminal.Command
                     return ErrorMessage.NotD(argv[0], ErrorMessage.DefaultErrorComment(arg));
                 }
 
+                // 동일한 이름의 파일이 이미 존재하는지 확인
                 if (VT.FileSystem.FileFind(absolutePath, VT.Root) != null)
                 {
                     return ErrorMessage.FExists(argv[0], ErrorMessage.DefaultErrorComment(arg));
                 }
 
+                // 디렉터리 생성
                 VT.FileSystem.FileCreate(parentPath, new FileDataStruct(fileName, VT.USER, 0b111101, FileType.D), VT.Root);
             }
 

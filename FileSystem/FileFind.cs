@@ -6,35 +6,38 @@ namespace VirtualTerminal.FileSystem
     {
         public Node<FileDataStruct>? FileFind(string? path, Node<FileDataStruct> root)
         {
-            if (path == null)
+            if (string.IsNullOrEmpty(path))
             {
                 return null;
             }
 
             Node<FileDataStruct> currentNode = root;
-            List<string> files = [];
-            string? fileName;
+            List<string> files = new List<string>();
 
+            // 경로 정리
             path = path.TrimStart('/');
             files.AddRange(path.Split('/'));
 
-            fileName = files.Last();
-
-            if (files[0] == "")
+            if (files.Count == 0 || files[0] == "")
             {
                 return root;
             }
 
+            // 파일 트리 탐색
             foreach (string file in files)
             {
-                foreach (Node<FileDataStruct> child in currentNode.Children.Where(child => child.Data.Name == file))
+                Node<FileDataStruct>? nextNode = currentNode.Children.FirstOrDefault(child => child.Data.Name == file);
+
+                if (nextNode == null)
                 {
-                    currentNode = child;
-                    break;
+                    // 경로가 존재하지 않으면 null 반환
+                    return null;
                 }
+
+                currentNode = nextNode;
             }
 
-            return currentNode.Data.Name != fileName ? null : currentNode;
+            return currentNode;
         }
     }
 }
