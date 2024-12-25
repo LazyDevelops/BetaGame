@@ -8,6 +8,13 @@ internal class BetaGame
                              "다시 이름을 입력해 주세요(영어, 숫자 만).\n> ",
                              @"^[a-zA-Z0-9]+$");
 
+        if(name == "root" || name == "nobody"){
+            Console.Clear();
+            Console.WriteLine("\u001b[31m사용할 수 없는 이름입니다.\u001b[0m");
+            Thread.Sleep(3000);
+            Environment.Exit(0);
+        }
+
         string check = "n";
 
         while(check != "y" && check != "Y")
