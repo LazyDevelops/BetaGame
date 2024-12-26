@@ -1,18 +1,30 @@
 ﻿{
   "1": {
-    "questContent": "/home/user 폴더에 eminai.txt를 만들고 안에 \"I love linux\" 내용을 넣고 저장하기",
+    "questContent": "{VT.HOME} 폴더에 hello.txt를 만들고 안에 \"I love linux\" 내용을 넣고 저장하기",
     "reward": {
       "exp": 20,
       "money": 1000
     }
   },
   "2": {
-    "questContent": "/home/user 폴더에 eminai.txt 삭제하기",
+    "questContent": "{VT.HOME} 폴더에 hello.txt 삭제하기",
     "reward": {
       "exp": 25,
       "money": 1500
     }
   },
-  "3": {},
-  "4": {}
+  "3": {
+    "questContent": "{VT.HOME} 폴더에 test.txt를 파일을 만들고 사용자는 읽기와 쓰기, 그 외는 읽기만 가능하게 설정하기",
+    "reward": {
+      "exp": 30,
+      "money": 1750
+    }
+  },
+  "4": {
+    "questContent": "{VT.HOME} 폴더에 date 명령어를 이용해 현재 시간이 입력된 date.txt 파일 만들기",
+    "reward": {
+      "exp": 35,
+      "money": 2000
+    }
+  }
 }

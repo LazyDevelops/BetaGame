@@ -21,7 +21,7 @@ namespace VirtualTerminal.Command
             if (argc == 1)
             {
                 // 현제 퀘스트 확인
-                return ReturnQuestContent(questNumber);
+                return ReturnQuestContent(questNumber)?.Replace("{VT.HOME}", VT.HOME);
             }
 
             if (argc == 2)
@@ -34,7 +34,8 @@ namespace VirtualTerminal.Command
 
                 // 입력으로 받은 번째의 퀘스트 확인
                 questNumber = intArgv;
-                return ReturnQuestContent(questNumber);
+                // 대체 다른 방법 고민하기
+                return ReturnQuestContent(questNumber)?.Replace("{VT.HOME}", VT.HOME);
             }
 
             if (argc == 3)

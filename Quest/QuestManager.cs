@@ -2,8 +2,8 @@
 {
     public class QuestManager
     {
-        private List<IQuest> _quests = [
-            new Quest1(), new Quest2()
+        private readonly List<IQuest> _quests = [
+            new Quest1(), new Quest2(), new Quest3()
         ];
 
         public int CurrentQuest = 1;
@@ -15,19 +15,19 @@
             if (questNumber < 0 || questNumber >= _quests.Count)
             {
                 errorMessage = "해당 번호의 퀘스트를 찾을 수 없습니다.";
-                return false;//"해당 번호의 퀘스트를 찾을 수 없습니다.\n";
+                return false;
             }
             
             if (questNumber+1 > CurrentQuest)
             {
                 errorMessage = "이전 퀘스트를 클리어한 뒤 시도해주세요.";
-                return false;//"이전 퀘스트를 클리어한 뒤 시도해주세요.\n";
+                return false;
             }
 
             if (questNumber + 1 < CurrentQuest)
             {
                 errorMessage = "이미 클리어한 퀘스트입니다.";
-                return false;//"이미 클리어한 퀘스트입니다.\n";
+                return false;
             }
 
             bool result = _quests[questNumber].QuestClearCheck(VT);

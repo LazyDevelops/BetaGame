@@ -17,7 +17,7 @@ namespace VirtualTerminal.Quest
 
             foreach (Node<FileDataStruct> tempFile in file.Children)
             {
-                if (tempFile.Data.Name != "eminai.txt")
+                if (tempFile.Data.Name != "hello.txt")
                 {
                     continue;
                 }
@@ -26,7 +26,7 @@ namespace VirtualTerminal.Quest
                 break;
             }
 
-            if (file.Data.Name != "eminai.txt")
+            if (file.Data.Name != "hello.txt")
             {
                 return false;
             }
