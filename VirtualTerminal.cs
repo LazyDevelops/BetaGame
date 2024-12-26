@@ -89,7 +89,7 @@ namespace VirtualTerminal
                 { "whoami", new WhoAmICommand() }
             };
             
-            maxExp = (int)Math.Round(100 * level * Math.Log(level + 1, 10), 0, MidpointRounding.AwayFromZero);
+            maxExp = (long)Math.Round(100 * level * Math.Log(level + 1, 10), 0, MidpointRounding.AwayFromZero);
         }
         
         internal long Exp
@@ -98,15 +98,14 @@ namespace VirtualTerminal
             set
             {
                 double result = 100 * level * Math.Log(level + 1, 10);
-                // 변수는 long인데 연산은 int?
-                int needExp = (int)Math.Round(result, 0, MidpointRounding.AwayFromZero);
+                long needExp = (long)Math.Round(result, 0, MidpointRounding.AwayFromZero);
 
                 while(value >= needExp)
                 {
                     value -= needExp;
                     level++;
                     result = 100 * level * Math.Log(level + 1, 10);
-                    needExp = (int)Math.Round(result, 0, MidpointRounding.AwayFromZero);
+                    needExp = (long)Math.Round(result, 0, MidpointRounding.AwayFromZero);
                 }
 
                 maxExp = needExp;
