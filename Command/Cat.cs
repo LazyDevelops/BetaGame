@@ -70,10 +70,10 @@ namespace VirtualTerminal.Command
                        "   파일 내용 출력 예시\n" +
                        "       cat file.txt\n" +
                        "   입출력 지정자 예시\n" +
-                       //"       cat > needFile.txt\n" +
-                       "       cat >> nNeedFile.txt\n" +
-                       //"       cat -f > needFile.txt\n" +
-                       "       (-f를 이용해 파일 덮어쓰기 가능)\n";
+                       "       cat > overFile.txt\n" +
+                       "       cat >> appendFile.txt\n";
+                //"       cat -f > needFile.txt\n" +
+                //"       (-f를 이용해 파일 덮어쓰기 가능)\n";
             }
 
             return "cat - 파일 내용 출력";
