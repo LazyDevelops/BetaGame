@@ -98,6 +98,7 @@ namespace VirtualTerminal
             set
             {
                 double result = 100 * level * Math.Log(level + 1, 10);
+                // 변수는 long인데 연산은 int?
                 int needExp = (int)Math.Round(result, 0, MidpointRounding.AwayFromZero);
 
                 while(value >= needExp)
