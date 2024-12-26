@@ -109,7 +109,7 @@ namespace VirtualTerminal.Command
                         }
                         else if (reward.Key == "exp")
                         {
-                            VT.exp += int.Parse(reward.Value);
+                            VT.Exp += int.Parse(reward.Value);
                         }
                     }
                 }

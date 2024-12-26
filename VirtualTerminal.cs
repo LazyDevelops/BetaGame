@@ -11,7 +11,7 @@ namespace VirtualTerminal
     public class VirtualTerminal
     {
         internal readonly Dictionary<string, ICommand> CommandMap;
-        internal long exp = 0;
+        private long _exp = 0;
 
         internal FileSystem.FileSystem FileSystem = new();
         internal Tree<FileDataStruct> FileTree;
@@ -88,6 +88,29 @@ namespace VirtualTerminal
                 { "rmdir", new RmDirCommand() },
                 { "whoami", new WhoAmICommand() }
             };
+            
+            maxExp = (int)Math.Round(100 * level * Math.Log(level + 1, 10), 0, MidpointRounding.AwayFromZero);
+        }
+        
+        internal long Exp
+        {
+            get => _exp;
+            set
+            {
+                double result = 100 * level * Math.Log(level + 1, 10);
+                int needExp = (int)Math.Round(result, 0, MidpointRounding.AwayFromZero);
+
+                while(value >= needExp)
+                {
+                    value -= needExp;
+                    level++;
+                    result = 100 * level * Math.Log(level + 1, 10);
+                    needExp = (int)Math.Round(result, 0, MidpointRounding.AwayFromZero);
+                }
+
+                maxExp = needExp;
+                _exp = value;
+            }
         }
 
         public void Run()

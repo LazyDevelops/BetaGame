@@ -5,10 +5,10 @@ namespace VirtualTerminal.Command
         public string? Execute(int argc, string[] argv, VirtualTerminal VT)
         {
             string? result = "레벨: " + VT.level +
-                             ", Exp: " + VT.exp + "\n" +
+                             ", Exp: " + VT.Exp + "\n" +
                              "0 [";
 
-            int progress = CalculateProgress(VT.maxExp, VT.exp, 20);
+            int progress = CalculateProgress(VT.maxExp, VT.Exp, 20);
 
             for (int i = 0; i < progress; i++)
             {
