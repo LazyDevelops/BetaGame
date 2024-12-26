@@ -139,13 +139,24 @@ namespace VirtualTerminal
                 return CommandMap["man"].Execute(2, ["man", argv[0]], this);
             }
 
-            string[] temp = argv.TakeWhile(x => x != ">>").ToArray();
+            string[] temp = argv.TakeWhile(x => x != ">>" && x != ">").ToArray();
             return action.Execute(temp.Length, temp, this);
         }
 
         private void HandleOutput(string? output, string[] argv)
         {
-            if (argv.Skip(1).Any(arg => arg == ">>"))
+            if (argv.Skip(1).Any(arg => arg == ">"))
+            {
+                int index = Array.IndexOf(argv, ">");
+                if (index == argv.Length - 1)
+                {
+                    Console.Write("bash: syntax error near unexpected token `newline'\n");
+                    return;
+                }
+
+                OverwriteRedirection(output, argv[index + 1]);
+            }
+            else if (argv.Skip(1).Any(arg => arg == ">>"))
             {
                 int index = Array.IndexOf(argv, ">>");
                 if (index == argv.Length - 1)
@@ -154,15 +165,64 @@ namespace VirtualTerminal
                     return;
                 }
 
-                AppendToFile(output, argv[index + 1]);
+                AppendRedirection(output, argv[index + 1]);
             }
             else
             {
                 Console.Write(output);
             }
         }
+        
+        private void OverwriteRedirection(string? output, string filePath)
+        {
+            string absolutePath = FileSystem.GetAbsolutePath(filePath, HOME, PWD);
+            string fileName = absolutePath.Split('/')[^1];
+            string parentPath = absolutePath.Replace('/' + fileName, "");
+            bool[] permission;
 
-        private void AppendToFile(string? output, string filePath)
+            Node<FileDataStruct>? file = FileSystem.FileFind(absolutePath, Root);
+            Node<FileDataStruct>? parentFile = FileSystem.FileFind(parentPath, Root);
+
+            if (parentFile == null)
+            {
+                Console.Write(ErrorMessage.NoSuchForD(filePath, ErrorMessage.DefaultErrorComment(filePath)));
+                return;
+            }
+
+            permission = FileSystem.CheckPermission(USER, parentFile, Root);
+
+            if (!permission[0] || !permission[1] || !permission[2])
+            {
+                Console.Write(ErrorMessage.PermissionDenied(filePath, ErrorMessage.DefaultErrorComment(filePath)));
+                return;
+            }
+
+            if (file != null)
+            {
+                permission = FileSystem.CheckPermission(USER, file, Root);
+
+                if (!permission[0] || !permission[1])
+                {
+                    Console.Write(ErrorMessage.PermissionDenied(filePath, ErrorMessage.DefaultErrorComment(filePath)));
+                    return;
+                }
+                
+                file.Data.Content = RemoveAnsiCodes(output)?.TrimEnd('\n');
+            }
+            else
+            {
+                if (parentFile.Data.FileType != FileType.D)
+                {
+                    Console.Write(ErrorMessage.NotD(filePath, ErrorMessage.DefaultErrorComment(filePath)));
+                    return;
+                }
+
+                output = RemoveAnsiCodes(output)?.TrimEnd('\n');
+                FileSystem.FileCreate(parentPath, new FileDataStruct(fileName, USER, 0b110100, FileType.F, output), Root);
+            }
+        }
+
+        private void AppendRedirection(string? output, string filePath)
         {
             string absolutePath = FileSystem.GetAbsolutePath(filePath, HOME, PWD);
             string fileName = absolutePath.Split('/')[^1];
@@ -244,39 +304,11 @@ namespace VirtualTerminal
                     break;
                 }
 
-                // 빈 문자열은 무시하고 계속 입력 받기
                 content += input + "\n";
             }
 
             return content.TrimEnd('\n');
         }
-
-        // internal string ReadMultiLineInput()
-        // {
-        //     string content = string.Empty;
-
-        //     while (true)
-        //     {
-        //         string? input = Console.ReadLine();
-
-        //         if (input == null){
-        //             break;
-        //         }
-
-        //         if(input[0] == 4)
-        //         {
-        //             break;
-        //         }
-        //         // if (string.IsNullOrEmpty(input) || input[0] == 4)
-        //         // {
-        //         //     break;
-        //         // }
-
-        //         content += input + "\n";
-        //     }
-
-        //     return content.TrimEnd('\n');
-        // }
 
         internal static void OptionCheck(ref Dictionary<string, bool> option, in string[] argv)
         {

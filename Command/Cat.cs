@@ -46,6 +46,7 @@ namespace VirtualTerminal.Command
             }
 
             return VT.ReadMultiLineInput() + "\n";
+
         }
 
         public string Description(bool detail)
@@ -69,9 +70,9 @@ namespace VirtualTerminal.Command
                        "   파일 내용 출력 예시\n" +
                        "       cat file.txt\n" +
                        "   입출력 지정자 예시\n" +
-                       "       cat > needFile.txt\n" +
+                       //"       cat > needFile.txt\n" +
                        "       cat >> nNeedFile.txt\n" +
-                       "       cat -f > needFile.txt\n" +
+                       //"       cat -f > needFile.txt\n" +
                        "       (-f를 이용해 파일 덮어쓰기 가능)\n";
             }
 
