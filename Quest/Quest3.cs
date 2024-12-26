@@ -15,14 +15,7 @@ namespace VirtualTerminal.Quest
                 return false;
             }
             
-            file = file.Children.Find(x => x.Data.Name == "test.txt");
-
-            if (file == null)
-            {
-                return false;
-            }
-            
-            if(VT.FileSystem.PermissionsToString(file.Data.Permission) != "rw-r--")
+            if (file.Children.Any(tempFile => tempFile.Data.Name == "hello.txt"))
             {
                 return false;
             }

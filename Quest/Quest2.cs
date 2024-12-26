@@ -9,13 +9,29 @@ namespace VirtualTerminal.Quest
         {
             Node<FileDataStruct>? file;
             file = VT.HomeNode;
-            
+
             if (file == null)
             {
                 return false;
             }
-            
-            if (file.Children.Any(tempFile => tempFile.Data.Name == "hello.txt"))
+
+            foreach (Node<FileDataStruct> tempFile in file.Children)
+            {
+                if (tempFile.Data.Name != "hello.txt")
+                {
+                    continue;
+                }
+
+                file = tempFile;
+                break;
+            }
+
+            if (file.Data.Name != "hello.txt")
+            {
+                return false;
+            }
+
+            if (file.Data.Content?.TrimEnd('\n').TrimEnd(' ') != "I love linux")
             {
                 return false;
             }

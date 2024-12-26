@@ -7,31 +7,7 @@ namespace VirtualTerminal.Quest
     {
         public bool QuestClearCheck(VirtualTerminal VT)
         {
-            Node<FileDataStruct>? file;
-            file = VT.HomeNode;
-
-            if (file == null)
-            {
-                return false;
-            }
-
-            foreach (Node<FileDataStruct> tempFile in file.Children)
-            {
-                if (tempFile.Data.Name != "hello.txt")
-                {
-                    continue;
-                }
-
-                file = tempFile;
-                break;
-            }
-
-            if (file.Data.Name != "hello.txt")
-            {
-                return false;
-            }
-
-            if (file.Data.Content?.TrimEnd('\n').TrimEnd(' ') != "I love linux")
+            if (VT.PWD != "/etc")
             {
                 return false;
             }

@@ -3,7 +3,7 @@
     public class QuestManager
     {
         private readonly List<IQuest> _quests = [
-            new Quest1(), new Quest2(), new Quest3(), new Quest4()
+            new Quest1(), new Quest2(), new Quest3(), new Quest4(), new Quest5()
         ];
 
         public int CurrentQuest = 1;
