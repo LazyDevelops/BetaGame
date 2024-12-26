@@ -10,13 +10,8 @@ namespace VirtualTerminal
 {
     public class VirtualTerminal
     {
-        internal long money = 0;
-        
-        internal long level = 1;
-        internal long exp = 0;
-        internal long maxExp = 10;
-
         internal readonly Dictionary<string, ICommand> CommandMap;
+        internal long exp = 0;
 
         internal FileSystem.FileSystem FileSystem = new();
         internal Tree<FileDataStruct> FileTree;
@@ -25,6 +20,10 @@ namespace VirtualTerminal
         // private List<FileNode> PWD;
         internal string HOME;
         internal Node<FileDataStruct>? HomeNode;
+
+        internal long level = 1;
+        internal long maxExp = 10;
+        internal long money = 0;
 
         internal string PWD;
         internal Node<FileDataStruct>? PwdNode;
@@ -103,7 +102,7 @@ namespace VirtualTerminal
                     continue;
                 }
 
-                ProcessCommand(command); 
+                ProcessCommand(command);
             }
         }
 
@@ -154,6 +153,7 @@ namespace VirtualTerminal
                     Console.Write("bash: syntax error near unexpected token `newline'\n");
                     return;
                 }
+
                 AppendToFile(output, argv[index + 1]);
             }
             else
@@ -258,11 +258,11 @@ namespace VirtualTerminal
         //     while (true)
         //     {
         //         string? input = Console.ReadLine();
-                
+
         //         if (input == null){
         //             break;
         //         }
-                
+
         //         if(input[0] == 4)
         //         {
         //             break;
@@ -277,7 +277,7 @@ namespace VirtualTerminal
 
         //     return content.TrimEnd('\n');
         // }
-        
+
         internal static void OptionCheck(ref Dictionary<string, bool> option, in string[] argv)
         {
             foreach (string arg in argv)

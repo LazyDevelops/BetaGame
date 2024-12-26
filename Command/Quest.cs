@@ -7,8 +7,8 @@ namespace VirtualTerminal.Command
 {
     public class QuestCommand : VirtualTerminal.ICommand
     {
-        private QuestManager _questManager = new();
-        
+        private readonly QuestManager _questManager = new();
+
         public string? Execute(int argc, string[] argv, VirtualTerminal VT)
         {
             int questNumber = _questManager.CurrentQuest;
@@ -17,7 +17,7 @@ namespace VirtualTerminal.Command
             {
                 return ErrorMessage.ArgLack(argv[0]);
             }
-            
+
             if (argc == 1)
             {
                 // 현제 퀘스트 확인
@@ -54,7 +54,38 @@ namespace VirtualTerminal.Command
             return null;
         }
 
-        private string ClearCheck(int questNumber, VirtualTerminal VT){
+        public string Description(bool detail)
+        {
+            if (detail)
+            {
+                return "\u001b[1m간략한 설명\x1b[22m\n" +
+                       "   quest - 미션, 미션 클리어 여부 확인 및 미션 클리어 검사\n\n" +
+                       "\u001b[1m사용법\u001b[22m\n" +
+                       "   quest clear/숫자 숫자 \n\n" +
+                       "\u001b[1m설명\u001b[22m\n" +
+                       "   위에 사용법을 이용하여 현제 퀘스트 및 원하는 번호의 퀘스트 및 클리어 여부를 확인할 수 있으며\n" +
+                       "   현제 퀘스트 및 원하는 번호의 퀘스트 클리어 검사를 받을 수 있습니다.\n" +
+                       "   (자세한 사용법은 예시 참조)\n\n" +
+                       "\u001b[1m옵션\u001b[22m\n" +
+                       "   (없음)\n\n" +
+                       "\u001b[1m예시\u001b[22m\n" +
+                       "   현제 퀘스트 출력\n" +
+                       "       quest\n" +
+                       "   내가 원하는 번호의 퀘스트 출력\n" +
+                       "       quest 1\n" +
+                       "       quest 2\n" +
+                       "   현제 퀘스트 클리어 검사 받기\n" +
+                       "       quest clear\n" +
+                       "   내가 원하는 퀘스트의 클리어 검사 받기\n" +
+                       "       quest clear 3\n" +
+                       "       quest clear 4\n";
+            }
+
+            return "quest - 미션, 미션 클리어 여부 확인 및 미션 클리어 검사";
+        }
+
+        private string ClearCheck(int questNumber, VirtualTerminal VT)
+        {
             string? error = null;
             bool result = _questManager.CheckQuest(questNumber, ref error, VT);
 
@@ -63,19 +94,20 @@ namespace VirtualTerminal.Command
                 return error;
             }
 
-            if(result)
+            if (result)
             {
                 List<KeyValuePair<string, string>>? rewards;
                 rewards = GetQuestRewards(questNumber);
 
-                if(rewards != null){
-                    foreach(var reward in rewards)
+                if (rewards != null)
+                {
+                    foreach (KeyValuePair<string, string> reward in rewards)
                     {
-                        if(reward.Key == "money")
+                        if (reward.Key == "money")
                         {
                             VT.money += int.Parse(reward.Value);
                         }
-                        else if(reward.Key == "exp")
+                        else if (reward.Key == "exp")
                         {
                             VT.exp += int.Parse(reward.Value);
                         }
@@ -88,17 +120,15 @@ namespace VirtualTerminal.Command
 
                 return "퀘스트 클리어 성공\n";
             }
-            else
-            {
-                return "퀘스트 클리어 실패\n";
-            }
+
+            return "퀘스트 클리어 실패\n";
         }
 
         private string? ReturnQuestContent(int questNumber)
         {
             string projectRoot = Path.Combine(AppContext.BaseDirectory, "..", "..", "..");
             string jsonFilePath = Path.Combine(projectRoot, "QuestList.json");
-            
+
             if (!File.Exists(jsonFilePath))
             {
                 return "JSON 파일이 존재하지 않습니다: " + jsonFilePath + "\n";
@@ -132,7 +162,7 @@ namespace VirtualTerminal.Command
                     return "해당 퀘스트는 내용이 없습니다.\n";
                 }
 
-                return (questNumber < _questManager.CurrentQuest ? $"{questContent}\u001b[1;32m(성공)\u001b[0m" : questContent)+"\n";
+                return (questNumber < _questManager.CurrentQuest ? $"{questContent}\u001b[1;32m(성공)\u001b[0m" : questContent) + "\n";
             }
             catch (Exception ex)
             {
@@ -189,7 +219,7 @@ namespace VirtualTerminal.Command
                 // KeyValuePair 목록 생성
                 List<KeyValuePair<string, string>> rewardList = new();
 
-                foreach (var reward in rewards)
+                foreach (KeyValuePair<string, JsonNode?> reward in rewards)
                 {
                     rewardList.Add(new KeyValuePair<string, string>(reward.Key, reward.Value?.ToString() ?? "null"));
                 }
@@ -201,36 +231,6 @@ namespace VirtualTerminal.Command
                 Console.WriteLine($"오류 발생: {ex.Message}");
                 return null;
             }
-        }
-
-        public string Description(bool detail)
-        {
-            if (detail)
-            {
-                return "\u001b[1m간략한 설명\x1b[22m\n" +
-                       "   quest - 미션, 미션 클리어 여부 확인 및 미션 클리어 검사\n\n" +
-                       "\u001b[1m사용법\u001b[22m\n" +
-                       "   quest clear/숫자 숫자 \n\n" +
-                       "\u001b[1m설명\u001b[22m\n" +
-                       "   위에 사용법을 이용하여 현제 퀘스트 및 원하는 번호의 퀘스트 및 클리어 여부를 확인할 수 있으며\n" +
-                       "   현제 퀘스트 및 원하는 번호의 퀘스트 클리어 검사를 받을 수 있습니다.\n" +
-                       "   (자세한 사용법은 예시 참조)\n\n" +
-                       "\u001b[1m옵션\u001b[22m\n" +
-                       "   (없음)\n\n" +
-                       "\u001b[1m예시\u001b[22m\n" +
-                       "   현제 퀘스트 출력\n" +
-                       "       quest\n" +
-                       "   내가 원하는 번호의 퀘스트 출력\n" +
-                       "       quest 1\n" +
-                       "       quest 2\n" +
-                       "   현제 퀘스트 클리어 검사 받기\n" +
-                       "       quest clear\n" + 
-                       "   내가 원하는 퀘스트의 클리어 검사 받기\n"+
-                       "       quest clear 3\n"+
-                       "       quest clear 4\n";
-            }
-
-            return "quest - 미션, 미션 클리어 여부 확인 및 미션 클리어 검사";
         }
     }
 }

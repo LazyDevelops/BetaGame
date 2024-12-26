@@ -1,7 +1,4 @@
-﻿using VirtualTerminal.FileSystem;
-using VirtualTerminal.Tree.General;
-
-namespace VirtualTerminal.Quest
+﻿namespace VirtualTerminal.Quest
 {
     public class Quest1 : QuestManager.IQuest
     {
@@ -11,7 +8,7 @@ namespace VirtualTerminal.Quest
             {
                 return false;
             }
-            
+
             return true;
         }
     }

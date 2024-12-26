@@ -4,7 +4,7 @@ namespace VirtualTerminal.Command
     {
         public string? Execute(int argc, string[] argv, VirtualTerminal VT)
         {
-            return "잔고: " + VT.money.ToString() + "\n";
+            return "잔고: " + VT.money + "\n";
         }
 
         public string Description(bool detail)

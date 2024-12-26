@@ -35,7 +35,7 @@ namespace VirtualTerminal.Quest
             {
                 return false;
             }
-            
+
             return true;
         }
     }

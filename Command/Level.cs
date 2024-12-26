@@ -4,26 +4,38 @@ namespace VirtualTerminal.Command
     {
         public string? Execute(int argc, string[] argv, VirtualTerminal VT)
         {
-            string? result = "레벨: " + VT.level.ToString() + 
-                             ", Exp: " + VT.exp.ToString() + "\n" +
+            string? result = "레벨: " + VT.level +
+                             ", Exp: " + VT.exp + "\n" +
                              "0 [";
-            
+
             int progress = CalculateProgress(VT.maxExp, VT.exp, 20);
 
-            for(int i = 0; i < progress; i++){
+            for (int i = 0; i < progress; i++)
+            {
                 result += "=";
             }
 
-            for(int i = progress; i < 20; i++){
+            for (int i = progress; i < 20; i++)
+            {
                 result += "-";
             }
 
-            result += "] " + VT.maxExp +"\n";
+            result += "] " + VT.maxExp + "\n";
 
             return result;
         }
 
-        static int CalculateProgress(long maxValue, long currentValue, int steps)
+        public string Description(bool detail)
+        {
+            if (detail)
+            {
+                return "level - 현제 레벨 확인\n";
+            }
+
+            return "level - 현제 레벨 확인";
+        }
+
+        private static int CalculateProgress(long maxValue, long currentValue, int steps)
         {
             if (maxValue <= 0)
             {
@@ -41,16 +53,6 @@ namespace VirtualTerminal.Command
 
             // 진행도는 0에서 steps 사이로 제한
             return Math.Clamp(progress, 0, steps);
-        }
-
-        public string Description(bool detail)
-        {
-            if (detail)
-            {
-                return "level - 현제 레벨 확인\n";
-            }
-
-            return "level - 현제 레벨 확인";
         }
     }
 }

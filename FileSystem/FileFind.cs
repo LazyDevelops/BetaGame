@@ -12,7 +12,7 @@ namespace VirtualTerminal.FileSystem
             }
 
             Node<FileDataStruct> currentNode = root;
-            List<string> files = new List<string>();
+            List<string> files = [];
 
             // 경로 정리
             path = path.TrimStart('/');

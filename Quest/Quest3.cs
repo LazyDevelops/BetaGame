@@ -9,17 +9,17 @@ namespace VirtualTerminal.Quest
         {
             Node<FileDataStruct>? file;
             file = VT.HomeNode;
-            
+
             if (file == null)
             {
                 return false;
             }
-            
+
             if (file.Children.Any(tempFile => tempFile.Data.Name == "hello.txt"))
             {
                 return false;
             }
-            
+
             return true;
         }
     }

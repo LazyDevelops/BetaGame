@@ -10,19 +10,19 @@ namespace VirtualTerminal.Quest
         {
             Node<FileDataStruct>? file;
             file = VT.HomeNode;
-            
+
             if (file == null)
             {
                 return false;
             }
-            
+
             file = file.Children.Find(x => x.Data.Name == "date.txt");
 
             if (file == null)
             {
                 return false;
             }
-            
+
             string? content = file.Data.Content?.TrimEnd('\n').TrimEnd(' ');
             const string format = "yyyy. MM. dd. (ddd) HH:mm:ss";
 
@@ -32,7 +32,7 @@ namespace VirtualTerminal.Quest
             {
                 return false;
             }
-            
+
             DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(file.Data.LastTouchTime);
             int count = 0;
 

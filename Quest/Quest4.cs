@@ -9,24 +9,24 @@ namespace VirtualTerminal.Quest
         {
             Node<FileDataStruct>? file;
             file = VT.HomeNode;
-            
+
             if (file == null)
             {
                 return false;
             }
-            
+
             file = file.Children.Find(x => x.Data.Name == "test.txt");
 
             if (file == null)
             {
                 return false;
             }
-            
-            if(VT.FileSystem.PermissionsToString(file.Data.Permission) != "rw-r--")
+
+            if (VT.FileSystem.PermissionsToString(file.Data.Permission) != "rw-r--")
             {
                 return false;
             }
-            
+
             return true;
         }
     }
