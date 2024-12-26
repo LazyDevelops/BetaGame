@@ -148,10 +148,21 @@ namespace VirtualTerminal
             if (argv.Skip(1).Any(arg => arg == ">"))
             {
                 int index = Array.IndexOf(argv, ">");
+                
                 if (index == argv.Length - 1)
                 {
                     Console.Write("bash: syntax error near unexpected token `newline'\n");
                     return;
+                }
+                
+                switch (argv[index + 1])
+                {
+                    case ">":
+                        Console.Write("bash: syntax error near unexpected token `>'\n");
+                        return;
+                    case ">>":
+                        Console.Write("bash: syntax error near unexpected token `>>'\n");
+                        return;
                 }
 
                 OverwriteRedirection(output, argv[index + 1]);
@@ -159,12 +170,23 @@ namespace VirtualTerminal
             else if (argv.Skip(1).Any(arg => arg == ">>"))
             {
                 int index = Array.IndexOf(argv, ">>");
+                
                 if (index == argv.Length - 1)
                 {
                     Console.Write("bash: syntax error near unexpected token `newline'\n");
                     return;
                 }
-
+                
+                switch (argv[index + 1])
+                {
+                    case ">":
+                        Console.Write("bash: syntax error near unexpected token `>'\n");
+                        return;
+                    case ">>":
+                        Console.Write("bash: syntax error near unexpected token `>>'\n");
+                        return;
+                }
+                
                 AppendRedirection(output, argv[index + 1]);
             }
             else
